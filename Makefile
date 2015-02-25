@@ -12,12 +12,12 @@ framework:
 executor:
 	$(CC) $(CFLAGS) $(COMMON) src/executor.cpp -o executor
 
-storage:
+service:
 	$(CC) $(CFLAGS) $(COMMON) 				\
 		src/storage.cpp 								\
 		-isrc/rocksdb/db.h 							\
 		/usr/local/lib/librocksdb.dylib \
-		-o storage
+		-o service
 
 clean:
 	rm framework executor storage

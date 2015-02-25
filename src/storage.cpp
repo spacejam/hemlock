@@ -5,7 +5,7 @@
  *      \/ /_/ \___|_| |_| |_|_|\___/ \___|_|\_\
  *      Tyler Neely 2015 t@jujit.su
  */
-#include <process/future.hpp>
+#include <string>
 
 #include <glog/logging.h>
 
@@ -13,9 +13,9 @@
 
 #include "rocksdb/db.h"
 
-using std::string;
-using process::Future;
+namespace Hemlock {
 
+//TODO(tan) add iterator to support replication.
 class Storage {
 public:
   //TODO(tan) This should not be something that can fail, so initialize outside.
@@ -41,24 +41,20 @@ public:
     }
   }
 
-  virtual Option<bool> Put(string key, string value)
+  virtual void Put(string key, string value)
   {
     rocksdb::Status s = db->Put(rocksdb::WriteOptions(), key, value);
     if (s.ok()) {
-      return Some(true);
     } else {
       LOG(ERROR) << "Failed to put key: " << s.ToString();
-      return None();
     }
   }
 
-  virtual Option<bool> Delete(string key)
+  virtual void Delete(string key)
   {
     rocksdb::Status s = db->Delete(rocksdb::WriteOptions(), key);
     if (s.ok()) {
-      return Some(true);
     } else {
-      return None();
     }
   }
  
@@ -71,3 +67,5 @@ private:
   rocksdb::Options options;
   rocksdb::DB* db;
 };
+
+} // namespace Hemlock
