@@ -1,12 +1,23 @@
+CC = g++
+override CFLAGS += -std=c++11
+COMMON = /usr/local/lib/libmesos.dylib
+
 all: hemlock
 
-hemlock: framework executor
+hemlock: framework executor storage
 
 framework:
-	g++ -std=c++11 src/hemlock.cpp -o hemlock /usr/local/lib/libmesos.dylib
+	$(CC) $(CFLAGS) $(COMMON) src/framework.cpp -o framework
 
 executor:
-	g++ -std=c++11 src/hemlock_executor.cpp -o hemlock_executor /usr/local/lib/libmesos.dylib
+	$(CC) $(CFLAGS) $(COMMON) src/executor.cpp -o executor
+
+storage:
+	$(CC) $(CFLAGS) $(COMMON) 				\
+		src/storage.cpp 								\
+		-isrc/rocksdb/db.h 							\
+		/usr/local/lib/librocksdb.dylib \
+		-o storage
 
 clean:
-	rm hemlock hemlock_executor
+	rm framework executor storage
